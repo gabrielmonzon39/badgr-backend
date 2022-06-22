@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  postgres:
+    container_name: postgres_puntocrea
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "qUhJtiDAEz"
+      POSTGRES_DB: "puntocrea_development"
+    networks:
+      - puntocrea
+  web:
+    container_name: puntocrea_backend
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/puntocrea_backend
+    ports:
+      - "3000:3000"
+    networks:
+      - puntocrea
+    depends_on:
+      - postgres
+
+networks:
+  puntocrea:

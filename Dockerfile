@@ -1,15 +1,17 @@
 FROM ruby:3.0.0
 
-ARG UID
-RUN adduser rails --uid $UID --disabled-password --gecos ""
+RUN apt-get update -qq \
+  && apt-get install -y nodejs postgresql-client
 
-ENV APP /usr/src/app
-RUN mkdir $APP
-WORKDIR $APP
+WORKDIR /puntocrea_backend
 
-COPY Gemfile* $APP/
-RUN bundle install -j3
+COPY ./Gemfile /puntocrea_backend/Gemfile
+COPY ./Gemfile.lock /puntocrea_backend/Gemfile.lock
+RUN bundle install
 
-COPY . $APP/
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
 
-CMD ["rails", "server", "-p", "8080", "-b", "0.0.0.0"]
+EXPOSE 3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
