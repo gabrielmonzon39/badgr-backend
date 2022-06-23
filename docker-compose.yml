@@ -23,6 +23,8 @@ services:
       - "3000:3000"
     networks:
       - puntocrea
+    stdin_open: true
+    tty: true
     depends_on:
       - postgres
 
