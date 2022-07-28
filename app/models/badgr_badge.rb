@@ -1,0 +1,2 @@
+class BadgrBadge < ApplicationRecord
+end

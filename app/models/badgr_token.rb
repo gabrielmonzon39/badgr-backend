@@ -1,0 +1,2 @@
+class BadgrToken < ApplicationRecord
+end
