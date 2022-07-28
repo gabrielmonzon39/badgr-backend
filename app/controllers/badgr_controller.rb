@@ -84,7 +84,7 @@ class BadgrController < ApplicationController
       badge_details = BadgrBadge.find_by(class_name: badge.badgeclass)
       {
         id: badge.entityId,
-        created_at: badge.createdAt,
+        created_at: badge.issuedOn,
         image: badge.image,
         badge_name: badge_details.name,
         badge_description: badge_details.description,
