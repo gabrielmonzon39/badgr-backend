@@ -23,16 +23,29 @@ class BadgrController < ApplicationController
     request = Net::HTTP::Post.new(url)
     request['Authorization'] = "Bearer #{badgr_token.token}"
     request['Content-Type'] = 'application/json'
-    request.body = JSON.generate(
-      recipient: {
-        identity: params[:email].to_s,
-        type: 'email',
-        hashed: true
-      },
-      narrative: params[:narrative].to_s,
-      expires: params[:expires].to_s,
-      notify: true
-    )
+    request.body = if params[:narrative].to_s.present?
+                     JSON.generate(
+                       recipient: {
+                         identity: params[:email].to_s,
+                         type: 'email',
+                         hashed: true,
+                         plaintextIdentity: params[:email].to_s
+                       },
+                       narrative: params[:narrative].to_s,
+                       notify: true
+                     )
+                   else
+                     JSON.generate(
+                       recipient: {
+                         identity: params[:email].to_s,
+                         type: 'email',
+                         hashed: true,
+                         plaintextIdentity: params[:email].to_s
+                       },
+                       notify: true
+                     )
+                   end
+
     response = JSON.parse(https.request(request).read_body, object_class: OpenStruct)
     render json: response
   end
